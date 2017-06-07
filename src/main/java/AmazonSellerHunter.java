@@ -57,12 +57,11 @@ public class AmazonSellerHunter {
             String line;
             while ((line = bf.readLine()) != null) {
                 driver.get(BASEURL + line);
-                driver.get("https://www.amazon.com/gp/offer-listing/B0087I8KTK");
                 List<WebElement> page = driver.findElements(By.id("olpOfferListColumn"));
                 List<WebElement> pagination = driver.findElements(By.cssSelector(".a-pagination > li"));
 
                 if (page.size() > 0) {
-                    if (pagination.size() > 0) {
+                    if (pagination.size() > 3) {
                     }
                 }
             }
@@ -75,7 +74,8 @@ public class AmazonSellerHunter {
         }
     }
 
-    public static void getSellers() {
-
+    public static List<Seller> getSellers(String url) {
+        List<Seller> sellers;
+        return sellers;
     }
 }
