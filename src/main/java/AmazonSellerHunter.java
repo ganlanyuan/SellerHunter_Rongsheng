@@ -10,7 +10,10 @@ import java.util.List;
  * Created by designer01 on 6/6/17.
  */
 public class AmazonSellerHunter {
+    private static final String AMAZONURL = "https://www.amazon.com";
     private static final String BASEURL = "https://www.amazon.com/gp/offer-listing/";
+    private static final String PRODUCTPATH = "document/products.txt";
+    private static final String BESTSELLERPATH = "document/bestSellers.txt";
     private int positive = 90;
     private int totalRating = 100;
 
@@ -32,16 +35,16 @@ public class AmazonSellerHunter {
 
     public static void main(String[] args) {
         AmazonSellerHunter hunter = new AmazonSellerHunter();
-        hunter.getBestSellers();
+        hunter.searchPages();
     }
 
-    public static void getBestSellers() {
+    public static void searchPages() {
         System.setProperty("webdriver.chrome.driver", "webdriver/chromedriver");
         WebDriver driver = new ChromeDriver();
 
-        File products = new File("document/products.txt");
+        File products = new File(PRODUCTPATH);
         WriteFile bestSellers = new WriteFile();
-        bestSellers.setFile("document/bestSellers.txt");
+        bestSellers.setFile(BESTSELLERPATH);
 
         String str = "Best Sellers for the following products: \n";
         bestSellers.setData(str);
@@ -70,5 +73,9 @@ public class AmazonSellerHunter {
         } finally {
             driver.quit();
         }
+    }
+
+    public static void getSellers() {
+
     }
 }
