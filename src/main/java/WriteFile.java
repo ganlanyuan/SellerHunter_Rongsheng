@@ -45,7 +45,7 @@ public class WriteFile {
                 '}';
     }
 
-    public void run () {
+    public void write () {
         File f = null;
         try {
             f = new File(this.file);
