@@ -45,7 +45,7 @@ public class WriteFile {
                 '}';
     }
 
-    public void write () {
+    public void write (boolean appendData) {
         File f = null;
         try {
             f = new File(this.file);
@@ -54,7 +54,7 @@ public class WriteFile {
         }
 
         try {
-            FileUtils.writeStringToFile(f, this.data, true);
+            FileUtils.writeStringToFile(f, this.data, appendData);
         } catch (IOException e) {
             e.printStackTrace();
         }

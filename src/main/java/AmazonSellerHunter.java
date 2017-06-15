@@ -11,26 +11,31 @@ import java.util.List;
  */
 public class AmazonSellerHunter {
     private static final String AMAZONURL = "https://www.amazon.com";
-    private static final String BASEURL = "https://www.amazon.com/gp/offer-listing/";
+    private static final String BASEURL1 = "https://www.amazon";
+    private static final String BASEURL2 = "/gp/offer-listing/";
     private static final String PRODUCTPATH = "document/products.txt";
     private static final String BESTSELLERPATH = "document/bestSellers.txt";
+    private static String urlPostfix = ".com";
     private static int positive = 90;
     private static int totalRating = 100;
 
     public int getPositive() {
         return positive;
     }
-
     public void setPositive(int positive) {
         this.positive = positive;
     }
-
-    public int getTotalRating() {
-        return totalRating;
-    }
-
+    public int getTotalRating() { return totalRating; }
     public void setTotalRating(int totalRating) {
         this.totalRating = totalRating;
+    }
+
+    public AmazonSellerHunter(String str, int pos, int rating) {
+        urlPostfix = str;
+        positive = pos;
+        totalRating = rating;
+    }
+    public AmazonSellerHunter() {
     }
 
     public static void main(String[] args) {
@@ -48,7 +53,7 @@ public class AmazonSellerHunter {
 
         String data = "Best Sellers for the following products: \n";
         wf.setData(data);
-        wf.write();
+        wf.write(false);
 
         try {
             FileReader fr = new FileReader(products);
@@ -60,7 +65,7 @@ public class AmazonSellerHunter {
                 String bestSellerUrl = "";
                 double price = 0;
 
-                String url = BASEURL + productId;
+                String url = BASEURL1 + urlPostfix + BASEURL2 + productId;
                 while (url != "") {
                     driver.get(url);
 
@@ -83,7 +88,9 @@ public class AmazonSellerHunter {
                         }
 
                         // get price
-                        double productPrice = Double.parseDouble(seller.findElement(By.className("olpOfferPrice")).getText().substring(1).replaceAll(",", ""));
+                        String priceString = seller.findElement(By.className("olpOfferPrice")).getText();
+                        int dollarIndex = priceString.indexOf("$");
+                        double productPrice = Double.parseDouble(priceString.substring(dollarIndex + 1).trim().replaceAll(",", ""));
                         double shippingPrice = 0;
                         double totalPrice;
 
@@ -91,7 +98,9 @@ public class AmazonSellerHunter {
                         if (seller.findElements(By.cssSelector(".olpPriceColumn .supersaver")).size() > 0 && productPrice < 35) {
                             shippingPrice = 4.98;
                         } else if (seller.findElements(By.className("olpShippingPrice")).size() > 0) {
-                            shippingPrice = Double.parseDouble(seller.findElement(By.className("olpShippingPrice")).getText().substring(1).replaceAll(",", ""));
+                            String priceString2 = seller.findElement(By.className("olpShippingPrice")).getText();
+                            int dollarIndex2 = priceString2.indexOf("$");
+                            shippingPrice = Double.parseDouble(priceString2.substring(dollarIndex2 + 1).trim().replaceAll(",", ""));
                         }
                         totalPrice = productPrice + shippingPrice;
 
@@ -134,7 +143,7 @@ public class AmazonSellerHunter {
 
                 data = "\nProduct ID: " + productId + "\n" + bestSellerName + ": " + bestSellerUrl + "\n";
                 wf.setData(data);
-                wf.write();
+                wf.write(true);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

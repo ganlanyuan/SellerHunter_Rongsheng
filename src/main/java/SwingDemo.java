@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Container;
+import java.awt.event.WindowEvent;
 
 /**
  * Created by designer01 on 6/8/17.
@@ -130,43 +131,54 @@ class LableDemo {
 
 class LayoutDemo {
     public static void main(String[] args) {
-        JFrame j = new JFrame("Layout Demo");
-        Container c = j.getContentPane();
-        GroupLayout layout = new GroupLayout(c);
-        j.setLayout(layout);
-        j.setSize(600, 400);
+        JFrame frame = new JFrame("Layout Demo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container panel = frame.getContentPane();
+        GroupLayout groupLayout = new GroupLayout(panel);
+        frame.setLayout(groupLayout);
+        frame.setSize(600, 400);
 
-        layout.setAutoCreateContainerGaps(true);
-        layout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+        groupLayout.setAutoCreateGaps(true);
 
-        JLabel countryL = new JLabel("国家：");
-        countryL.setSize(80, 30);
+        JLabel countryL = new JLabel("选择国家：");
+        countryL.setSize(120, 30);
+        JLabel positiveL = new JLabel("最低好评率：");
+        positiveL.setSize(120, 30);
+        JLabel ratingL = new JLabel("最少rating数：");
+        ratingL.setSize(120, 30);
 
         String[] countryList = {"US", "UK", "CA"};
         JComboBox countryC = new JComboBox(countryList);
         countryC.setSize(80, 30);
-
-        JLabel positiveL = new JLabel("好评率：");
-        positiveL.setSize(80, 30);
-
         JSlider positiveS = new JSlider(0, 100, 50);
         positiveS.setSize(80, 30);
-
-        JLabel ratingL = new JLabel("最少rating数：");
-        ratingL.setSize(80, 30);
-
-        JTextField ratingT = new JTextField();
+        JTextField ratingT = new JTextField("20");
         ratingT.setSize(80, 30);
+        JButton button = new JButton("Submit");
+        button.setSize(60, 40);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String country = countryC.getSelectedItem().toString();
+                int positive = positiveS.getValue();
+                int rating = Integer.parseInt(ratingT.getText());
+                System.out.println("country: " + country + "\npositive: " + positive + "\nrating: " + rating);
+                System.exit(0);
+            }
+        });
 
-        JTextField t = new JTextField(10);
-        JButton b = new JButton("Submit");
-        b.setSize(60, 40);
+        groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(countryL).addComponent(positiveL).addComponent(ratingL))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING).addComponent(countryC).addComponent(positiveS).addComponent(ratingT).addComponent(button)));
 
-        layout.setHorizontalGroup(
-                layout.createSequentialGroup()
-                .addGroup()
-        );
-        j.pack();
-        j.setVisible(true);
+        groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(countryL).addComponent(countryC))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(positiveL).addComponent(positiveS))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(ratingL).addComponent(ratingT))
+                .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(button)));
+
+        frame.pack();
+        frame.setVisible(true);
     }
 }
